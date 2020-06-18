@@ -29,14 +29,22 @@ $functions = array(
                 'classpath'   => 'local/wstemplate/externallib.php',
                 'description' => 'Return Hello World FIRSTNAME. Can change the text (Hello World) sending a new text as parameter',
                 'type'        => 'read',
-        )
+        ),
+        'local_wstemplate_available_courses' => array(
+                'classname'   => 'local_wstemplate_external',
+                'methodname'  => 'available_courses',
+                'classpath'   => 'local/wstemplate/externallib.php',
+                'description' => 'Return the list of courses where the user is enrolled as teacher',
+                'type'        => 'read',
+        ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
         'My service' => array(
-                'functions' => array ('local_wstemplate_hello_world'),
+                'functions' => array ('local_wstemplate_hello_world','local_wstemplate_available_courses'),
                 'restrictedusers' => 0,
                 'enabled'=>1,
+                'shortname' => 'myservice'
         )
 );

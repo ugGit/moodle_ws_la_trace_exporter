@@ -68,6 +68,72 @@ class local_wstemplate_external extends external_api {
         return new external_value(PARAM_TEXT, 'The welcome message + user first name');
     }
 
+    /* ----------------------------------------------------------------------- */
+
+    /**
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function available_courses_parameters() {
+        return new external_function_parameters(
+                array()
+        );
+    }
+
+    /**
+     * Returns welcome message
+     * @return string welcome message
+     */
+    public static function available_courses($welcomemessage = 'Hello world, ') {
+        // Make the User object available in this function
+        global $USER;
+        // Make the DB object available in this function
+        global $DB;
+
+        //Parameter validation if any
+
+        //Context validation
+        //OPTIONAL but in most web service it should present
+        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        self::validate_context($context);
+
+        //Capability checking
+        //OPTIONAL but in most web service it should present
+        /*
+        if (!has_capability('moodle/user:viewdetails', $context)) {
+            throw new moodle_exception('cannotviewprofile');
+        }
+        */
+
+        // Check courses that the user is enrolled in
+        // $sql = 'SELECT * FROM {user};';
+        $sql = "SELECT c.id AS 'course_id', c.shortname, u.id AS 'user_id', u.username, ra.roleid AS 'role_id' FROM {course} c 
+                LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
+                LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
+                LEFT OUTER JOIN {user} u ON ra.userid = u.id 
+                WHERE u.id = '".$USER->id."' AND cx.contextlevel = '50' AND ra.roleid = '3';";
+        $result = $DB->get_records_sql($sql);
+
+        return $result;
+    }
+
+    /**
+     * Returns description of method result value
+     * @return external_description
+     */
+    public static function available_courses_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'course_id' => new external_value(PARAM_INT, 'the course id'),
+                    'shortname' => new external_value(PARAM_TEXT, 'the course shortname'),
+                    'user_id' => new external_value(PARAM_INT, 'the users id'),
+                    'username' => new external_value(PARAM_TEXT, 'the username'),
+                    'role_id' => new external_value(PARAM_INT, 'the role id in this course'),
+                )
+            )
+        );
+    }
 
 
 }
