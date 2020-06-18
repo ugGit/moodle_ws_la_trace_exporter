@@ -111,8 +111,9 @@ class local_wstemplate_external extends external_api {
                 LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
                 LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
                 LEFT OUTER JOIN {user} u ON ra.userid = u.id 
-                WHERE u.id = '".$USER->id."' AND cx.contextlevel = '50' AND ra.roleid = '3';";
-        $result = $DB->get_records_sql($sql);
+                WHERE u.id = :u_id AND cx.contextlevel = :cx_level AND ra.roleid = :ra_roleid;";
+        $query_params = ['u_id' => $USER->id, 'cx_level' => '50', 'ra_roleid' => '3'];
+        $result = $DB->get_records_sql($sql, $query_params);
 
         return $result;
     }
