@@ -74,7 +74,7 @@ class local_wstemplate_external extends external_api {
      * Returns description of method parameters
      * @return external_function_parameters
      */
-    public static function available_courses_parameters() {
+    public static function get_available_courses_parameters() {
         return new external_function_parameters(
                 array()
         );
@@ -84,7 +84,7 @@ class local_wstemplate_external extends external_api {
      * Returns welcome message
      * @return string welcome message
      */
-    public static function available_courses($welcomemessage = 'Hello world, ') {
+    public static function get_available_courses($welcomemessage = 'Hello world, ') {
         // Make the User object available in this function
         global $USER;
         // Make the DB object available in this function
@@ -122,7 +122,7 @@ class local_wstemplate_external extends external_api {
      * Returns description of method result value
      * @return external_description
      */
-    public static function available_courses_returns() {
+    public static function get_available_courses_returns() {
         return new external_multiple_structure(
             new external_single_structure(
                 array(
@@ -136,5 +136,38 @@ class local_wstemplate_external extends external_api {
         );
     }
 
+    /* ----------------------------------------------------------------------- */
+ 
+    /**
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function get_course_data_parameters() {
+        return new external_function_parameters(
+                array('welcomemessage' => new external_value(PARAM_TEXT, 'The welcome message. By default it is "Hello world,"', VALUE_DEFAULT, 'Hello world, '))
+        );
+    }
 
+    /**
+     * Returns welcome message
+     * @return string welcome message
+     */
+    public static function get_course_data($welcomemessage = 'Hello world, ') {
+        global $USER;
+
+        //Parameter validation
+        //REQUIRED
+        $params = self::validate_parameters(self::hello_world_parameters(),
+                array('welcomemessage' => $welcomemessage));
+
+        return "haha" ;
+    }
+
+    /**
+     * Returns description of method result value
+     * @return external_description
+     */
+    public static function get_course_data_returns() {
+        return new external_value(PARAM_TEXT, 'The welcome message + user first name');
+    }
 }
