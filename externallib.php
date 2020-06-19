@@ -21,6 +21,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->libdir . "/externallib.php");
+require_once($CFG->dirroot.'/report/log/locallib.php');
+
+// Include the Log Manager to access the SQL Log Reader
+use core\log\manager;
 
 class local_wstemplate_external extends external_api {
 
@@ -107,13 +111,13 @@ class local_wstemplate_external extends external_api {
 
         // Check courses that the user is enrolled in
         // $sql = 'SELECT * FROM {user};';
-        $sql = "SELECT c.id AS 'course_id', c.shortname, u.id AS 'user_id', u.username, ra.roleid AS 'role_id' FROM {course} c 
+        $sql = "SELECT c.id AS 'courseid', c.shortname, u.id AS 'userid', u.username, ra.roleid FROM {course} c 
                 LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
                 LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
                 LEFT OUTER JOIN {user} u ON ra.userid = u.id 
                 WHERE u.id = :u_id AND cx.contextlevel = :cx_level AND ra.roleid = :ra_roleid;";
-        $query_params = ['u_id' => $USER->id, 'cx_level' => '50', 'ra_roleid' => '3'];
-        $result = $DB->get_records_sql($sql, $query_params);
+        $queryparams = ['u_id' => $USER->id, 'cx_level' => '50', 'ra_roleid' => '3'];
+        $result = $DB->get_records_sql($sql, $queryparams);
 
         return $result;
     }
@@ -126,11 +130,11 @@ class local_wstemplate_external extends external_api {
         return new external_multiple_structure(
             new external_single_structure(
                 array(
-                    'course_id' => new external_value(PARAM_INT, 'the course id'),
+                    'courseid' => new external_value(PARAM_INT, 'the course id'),
                     'shortname' => new external_value(PARAM_TEXT, 'the course shortname'),
-                    'user_id' => new external_value(PARAM_INT, 'the users id'),
+                    'userid' => new external_value(PARAM_INT, 'the users id'),
                     'username' => new external_value(PARAM_TEXT, 'the username'),
-                    'role_id' => new external_value(PARAM_INT, 'the role id in this course'),
+                    'roleid' => new external_value(PARAM_INT, 'the role id in this course'),
                 )
             )
         );
@@ -144,23 +148,82 @@ class local_wstemplate_external extends external_api {
      */
     public static function get_course_data_parameters() {
         return new external_function_parameters(
-                array('welcomemessage' => new external_value(PARAM_TEXT, 'The welcome message. By default it is "Hello world,"', VALUE_DEFAULT, 'Hello world, '))
+                array(
+                    'courseid' => new external_value(PARAM_INT, 'the id of the course'),
+                    'userid' => new external_value(PARAM_INT, 'filter results for this user (deactivated if "-1")', VALUE_DEFAULT, -1),
+                    )
         );
     }
 
+
+    /**
+     * Query the reader. Store results in the object for use by build_table.
+     * 
+     * Taken from log/classes/event/table_log.php => method: setup_table(...).
+     */
     /**
      * Returns welcome message
      * @return string welcome message
      */
-    public static function get_course_data($welcomemessage = 'Hello world, ') {
+    public static function get_course_data($courseid, $userid = -1) {
         global $USER;
 
         //Parameter validation
         //REQUIRED
-        $params = self::validate_parameters(self::hello_world_parameters(),
-                array('welcomemessage' => $welcomemessage));
+        $params = self::validate_parameters(self::get_course_data_parameters(),
+                array(
+                    'courseid' => $courseid,
+                    'userid' => $userid,
+                ));
 
-        return "haha" ;
+        $joins = array();
+        $params = array();
+
+        // Add course id as conditionto query
+        $joins[] = "courseid = :courseid";
+        $params['courseid'] = $courseid;
+
+
+        // Add filter for specified user if any given
+        if ($userid != -1) {
+            $joins[] = "userid = :userid";
+            $params['userid'] = $userid;
+        }
+/*
+        // Add filter for specified time interval
+        if (!empty($this->filterparams->date)) {
+            $joins[] = "timecreated > :date AND timecreated < :enddate";
+            $params['date'] = $this->filterparams->date;
+            $params['enddate'] = $this->filterparams->date + DAYSECS; // Show logs only for the selected date.
+        }
+*/
+
+        
+        $selector = implode(' AND ', $joins);
+
+
+
+        $logmanager = get_log_manager();
+        $readers = $logmanager->get_readers('core\log\sql_reader');
+        // TODO: only temporary select default reader. later specify exactly which one (should be the Standard Log reader...)
+        $logreader = "";
+        if (!empty($readers)) {
+            reset($readers);
+            $logreader = $readers[key($readers)];
+        }
+        else {
+            throw new moodle_exception('nologreaderavailable');
+        }
+        $orderby = "timecreated ASC";
+        $maxrecord = $logreader->get_events_select_count($selector, $params);
+        $output = $logreader->get_events_select($selector, $params, $orderby, 0, $maxrecord);
+        $result = array();
+        foreach($output as $item){
+            $result[] = $item->get_data();
+        }
+
+        // return var_dump($result);
+        return $result;
     }
 
     /**
@@ -168,6 +231,20 @@ class local_wstemplate_external extends external_api {
      * @return external_description
      */
     public static function get_course_data_returns() {
-        return new external_value(PARAM_TEXT, 'The welcome message + user first name');
+        // return new external_value(PARAM_TEXT, 'The welcome message + user first name');
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    // 'id' => new external_value(PARAM_TEXT, 'the action id'),
+                    'action' => new external_value(PARAM_TEXT, 'the action type'),
+                    'target' => new external_value(PARAM_TEXT, 'the target on which the action aims'),
+                    'crud' => new external_value(PARAM_TEXT, 'the type of action (Create/Read/Update/Delete)'),
+                    'eventname' => new external_value(PARAM_TEXT, 'the full moodle event name'),
+                    'userid' => new external_value(PARAM_INT, 'the users id'),
+                    'courseid' => new external_value(PARAM_TEXT, 'the course id'),
+                    'timecreated' => new external_value(PARAM_INT, 'the creation time of the action'),
+                )
+            )
+        );
     }
 }

@@ -42,7 +42,7 @@ $functions = array(
                 'classname'   => 'local_wstemplate_external',
                 'methodname'  => 'get_course_data',
                 'classpath'   => 'local/wstemplate/externallib.php',
-                'description' => 'Return the course log',
+                'description' => 'Return the log for the given course',
                 'type'        => 'read',
         ),
 );
