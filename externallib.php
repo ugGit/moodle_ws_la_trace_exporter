@@ -85,8 +85,9 @@ class local_wstemplate_external extends external_api {
     }
 
     /**
-     * Returns welcome message
-     * @return string welcome message
+     * Get the available courses for this user
+     * 
+     * @return array of available courses
      */
     public static function get_available_courses($welcomemessage = 'Hello world, ') {
         // Make the User object available in this function
@@ -96,21 +97,22 @@ class local_wstemplate_external extends external_api {
 
         //Parameter validation if any
 
+        /* Could fetch all enrolled courses. Then show all courses.
+           Next step would be to ask if all users or a specific one. Thus, create a new endpoint.
+           moodle/course:viewparicipants capability would be required
         //Context validation
         //OPTIONAL but in most web service it should present
         $context = get_context_instance(CONTEXT_USER, $USER->id);
         self::validate_context($context);
 
         //Capability checking
-        //OPTIONAL but in most web service it should present
-        /*
+        //OPTIONAL but in most web service it should present       
         if (!has_capability('moodle/user:viewdetails', $context)) {
             throw new moodle_exception('cannotviewprofile');
         }
         */
 
-        // Check courses that the user is enrolled in
-        // $sql = 'SELECT * FROM {user};';
+        // Check courses that the user is enrolled in as teacher (roleid = 3)
         $sql = "SELECT c.id AS 'courseid', c.shortname, u.id AS 'userid', u.username, ra.roleid FROM {course} c 
                 LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
                 LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
@@ -157,24 +159,28 @@ class local_wstemplate_external extends external_api {
 
 
     /**
-     * Query the reader. Store results in the object for use by build_table.
+     * Get the log for a specific course.
      * 
-     * Taken from log/classes/event/table_log.php => method: setup_table(...).
-     */
-    /**
-     * Returns welcome message
-     * @return string welcome message
+     * The access to the log through the SQL Log Reader is inspired by: log/classes/event/table_log.php => method: setup_table(...).
+     * 
+     * @return array of log entries which represent actions.
      */
     public static function get_course_data($courseid, $userid = -1) {
-        global $USER;
-
-        //Parameter validation
-        //REQUIRED
+        // Parameter validation
         $params = self::validate_parameters(self::get_course_data_parameters(),
                 array(
                     'courseid' => $courseid,
                     'userid' => $userid,
                 ));
+
+        // Context validation
+        $coursecontext = context_course::instance($courseid);
+        self::validate_context($coursecontext);
+
+        // Capability checking
+        if (!has_capability('report/log:view', $coursecontext)) {
+            throw new moodle_exception('You have not the required capabilities (report/log:view) to use this function.');
+        }
 
         $joins = array();
         $params = array();
@@ -189,30 +195,19 @@ class local_wstemplate_external extends external_api {
             $joins[] = "userid = :userid";
             $params['userid'] = $userid;
         }
-/*
-        // Add filter for specified time interval
-        if (!empty($this->filterparams->date)) {
-            $joins[] = "timecreated > :date AND timecreated < :enddate";
-            $params['date'] = $this->filterparams->date;
-            $params['enddate'] = $this->filterparams->date + DAYSECS; // Show logs only for the selected date.
-        }
-*/
-
         
         $selector = implode(' AND ', $joins);
 
-
-
         $logmanager = get_log_manager();
         $readers = $logmanager->get_readers('core\log\sql_reader');
-        // TODO: only temporary select default reader. later specify exactly which one (should be the Standard Log reader...)
         $logreader = "";
         if (!empty($readers)) {
             reset($readers);
+            // Select temporary the default log reader
             $logreader = $readers[key($readers)];
         }
         else {
-            throw new moodle_exception('nologreaderavailable');
+            throw new moodle_exception('There is no log reader available.');
         }
         $orderby = "timecreated ASC";
         $maxrecord = $logreader->get_events_select_count($selector, $params);
