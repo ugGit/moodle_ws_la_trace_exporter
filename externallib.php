@@ -151,53 +151,40 @@ class local_wstemplate_external extends external_api {
     public static function get_course_data_parameters() {
         return new external_function_parameters(
                 array(
-                    'courseid' => new external_value(PARAM_INT, 'the id of the course'),
-                    'userid' => new external_value(PARAM_INT, 'filter results for this user (deactivated if "-1")', VALUE_DEFAULT, -1),
+                    'courseids' => new external_multiple_structure(
+                        new external_value(PARAM_INT, 'the id of a course')
                     )
+                )
         );
     }
 
 
     /**
-     * Get the log for a specific course.
+     * Get the log for a specified courses.
      * 
      * The access to the log through the SQL Log Reader is inspired by: log/classes/event/table_log.php => method: setup_table(...).
      * 
      * @return array of log entries which represent actions.
      */
-    public static function get_course_data($courseid, $userid = -1) {
+    public static function get_course_data($courseids) {
         // Parameter validation
         $params = self::validate_parameters(self::get_course_data_parameters(),
                 array(
-                    'courseid' => $courseid,
-                    'userid' => $userid,
+                    'courseids' => $courseids,
                 ));
 
-        // Context validation
-        $coursecontext = context_course::instance($courseid);
-        self::validate_context($coursecontext);
 
-        // Capability checking
-        if (!has_capability('report/log:view', $coursecontext)) {
-            throw new moodle_exception('You have not the required capabilities (report/log:view) to use this function.');
-        }
+        foreach($courseids as $courseid){
+            // Context validation
+            $coursecontext = context_course::instance($courseid);
+            self::validate_context($coursecontext);
 
-        $joins = array();
-        $params = array();
-
-        // Add course id as conditionto query
-        $joins[] = "courseid = :courseid";
-        $params['courseid'] = $courseid;
-
-
-        // Add filter for specified user if any given
-        if ($userid != -1) {
-            $joins[] = "userid = :userid";
-            $params['userid'] = $userid;
+            // Capability checking
+            if (!has_capability('report/log:view', $coursecontext)) {
+                throw new moodle_exception('You have not the required capabilities (report/log:view) to use this function.');
+            }
         }
         
-        $selector = implode(' AND ', $joins);
-
         $logmanager = get_log_manager();
         $readers = $logmanager->get_readers('core\log\sql_reader');
         $logreader = "";
@@ -209,9 +196,14 @@ class local_wstemplate_external extends external_api {
         else {
             throw new moodle_exception('There is no log reader available.');
         }
+
+        // Add course id as condition to query. Here are no prepared statements used as it's
+        // not possible when using the SQL "IN" clause.
+        $coursesEnumerated  = implode(', ',$courseids);
+        $selector = "courseid IN (".$coursesEnumerated.")";
         $orderby = "timecreated ASC";
         $maxrecord = $logreader->get_events_select_count($selector, $params);
-        $output = $logreader->get_events_select($selector, $params, $orderby, 0, $maxrecord);
+        $output = $logreader->get_events_select($selector, array(), $orderby, 0, $maxrecord);
         $result = array();
         foreach($output as $item){
             $result[] = $item->get_data();
