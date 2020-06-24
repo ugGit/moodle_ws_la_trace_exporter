@@ -255,8 +255,9 @@ class local_wstemplate_external extends external_api {
                     'edulevel' => new external_value(PARAM_TEXT, 'the level of educational value of the event'), 
                     'eventname' => new external_value(PARAM_TEXT, 'the full moodle event name'),
                     'userid' => new external_value(PARAM_INT, 'the users id'),
-                    'courseid' => new external_value(PARAM_TEXT, 'the course id'),
                     'role' => new external_value(PARAM_TEXT, 'the role(s) assigned to the user in this course'),
+                    'relateduserid' => new external_value(PARAM_TEXT, 'the affected user if any'),
+                    'courseid' => new external_value(PARAM_TEXT, 'the course id'),
                     'timecreated' => new external_value(PARAM_INT, 'the creation time of the action'),
                 )
             )
