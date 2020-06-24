@@ -112,7 +112,7 @@ class local_wstemplate_external extends external_api {
         }
         */
 
-        // Check courses that the user is enrolled in as teacher (roleid = 3)
+        // Check courses that the user is enrolled in as editingteacher (roleid = 3)
         $sql = "SELECT c.id AS 'courseid', c.shortname, u.id AS 'userid', u.username, ra.roleid FROM {course} c 
                 LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
                 LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
@@ -167,6 +167,8 @@ class local_wstemplate_external extends external_api {
      * @return array of log entries which represent actions.
      */
     public static function get_course_data($courseids) {
+        global $DB;
+
         // Parameter validation
         $params = self::validate_parameters(self::get_course_data_parameters(),
                 array(
@@ -184,13 +186,27 @@ class local_wstemplate_external extends external_api {
                 throw new moodle_exception('You have not the required capabilities (report/log:view) to use this function.');
             }
         }
+        unset($courseid); // break the reference with the last element
+
+        $coursesEnumerated  = "(".implode(', ',$courseids).")";
+
+        // Get the assigned roles in each course for all users
+        $sqlAssignedRoles = "SELECT c.id AS 'courseid', u.id AS 'userid', r.shortname FROM {course} c 
+                LEFT OUTER JOIN {context} cx ON c.id = cx.instanceid 
+                LEFT OUTER JOIN {role_assignments} ra ON cx.id = ra.contextid
+                LEFT OUTER JOIN {role} r on r.id = ra.roleid
+                LEFT OUTER JOIN {user} u ON ra.userid = u.id 
+                WHERE c.id IN ".$coursesEnumerated." AND cx.contextlevel = :cx_level";
+        $queryparams = ['cx_level' => '50'];
+        $assignedRoles = $DB->get_records_sql($sqlAssignedRoles, $queryparams);
         
+        // Prepare the log reader
         $logmanager = get_log_manager();
         $readers = $logmanager->get_readers('core\log\sql_reader');
         $logreader = "";
         if (!empty($readers)) {
             reset($readers);
-            // Select temporary the default log reader
+            // Select the default log (usually Standard Log)
             $logreader = $readers[key($readers)];
         }
         else {
@@ -199,14 +215,23 @@ class local_wstemplate_external extends external_api {
 
         // Add course id as condition to query. Here are no prepared statements used as it's
         // not possible when using the SQL "IN" clause.
-        $coursesEnumerated  = implode(', ',$courseids);
-        $selector = "courseid IN (".$coursesEnumerated.")";
+        $selector = "courseid IN ".$coursesEnumerated;
         $orderby = "timecreated ASC";
         $maxrecord = $logreader->get_events_select_count($selector, $params);
-        $output = $logreader->get_events_select($selector, array(), $orderby, 0, $maxrecord);
-        $result = array();
-        foreach($output as $item){
-            $result[] = $item->get_data();
+        $logOutput = $logreader->get_events_select($selector, array(), $orderby, 0, $maxrecord);
+        $result = [];
+        foreach($logOutput as $item){
+            $currentItem = $item->get_data();
+            // Fetch all assigned roles in this course for the user
+            $roles = [];
+            foreach($assignedRoles as $assignedRole){
+                if($assignedRole->userid == $currentItem["userid"] && $assignedRole->courseid == $currentItem["courseid"]){
+                    $roles[] = $assignedRole->shortname;
+                }
+            } 
+            $role = (sizeof($roles) > 0) ? implode(', ', $roles) : "norole";
+            $currentItem["role"] = $role;
+            $result[] = $currentItem;
         }
 
         // return var_dump($result);
@@ -226,9 +251,12 @@ class local_wstemplate_external extends external_api {
                     'action' => new external_value(PARAM_TEXT, 'the action type'),
                     'target' => new external_value(PARAM_TEXT, 'the target on which the action aims'),
                     'crud' => new external_value(PARAM_TEXT, 'the type of action (Create/Read/Update/Delete)'),
+                    'contextlevel' => new external_value(PARAM_TEXT, 'the context level of the action (course, activity, course category, etc.)'), 
+                    'edulevel' => new external_value(PARAM_TEXT, 'the level of educational value of the event'), 
                     'eventname' => new external_value(PARAM_TEXT, 'the full moodle event name'),
                     'userid' => new external_value(PARAM_INT, 'the users id'),
                     'courseid' => new external_value(PARAM_TEXT, 'the course id'),
+                    'role' => new external_value(PARAM_TEXT, 'the role(s) assigned to the user in this course'),
                     'timecreated' => new external_value(PARAM_INT, 'the creation time of the action'),
                 )
             )
