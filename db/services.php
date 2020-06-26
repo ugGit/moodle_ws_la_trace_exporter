@@ -23,13 +23,6 @@
 
 // We defined the web service functions to install.
 $functions = array(
-        'local_wafed_moodle_webservice_plugin_hello_world' => array(
-                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
-                'methodname'  => 'hello_world',
-                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
-                'description' => 'Return Hello World FIRSTNAME. Can change the text (Hello World) sending a new text as parameter',
-                'type'        => 'read',
-        ),
         'local_wafed_moodle_webservice_plugin_get_available_courses' => array(
                 'classname'   => 'local_wafed_moodle_webservice_plugin_external',
                 'methodname'  => 'get_available_courses',
@@ -50,7 +43,7 @@ $functions = array(
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
         'TB WAFED Web Services' => array(
-                'functions' => array ('local_wafed_moodle_webservice_plugin_hello_world','local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
+                'functions' => array ('local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
                 'restrictedusers' => 0,
                 'enabled'=>1,
                 'shortname' => 'wafed_webservices'
