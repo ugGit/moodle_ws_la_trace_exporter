@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service template plugin related strings
+ * TB WAFED webservices plugin related strings
  * @package   local_wafed_moodle_webservice_plugin
- * @copyright 2011 Moodle Pty Ltd (http://moodle.com)
- * @author    Jerome Mouneyrac
+ * @copyright 2020 HEIA-FR (heia-fr.ch/)
+ * @author    Uchendu Nwachukwu
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

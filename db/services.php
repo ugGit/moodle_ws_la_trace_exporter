@@ -17,7 +17,8 @@
  * Web service local plugin template external functions and service definitions.
  *
  * @package    local_wafed_moodle_webservice_plugin
- * @copyright  2011 Jerome Mouneyrac
+ * @copyright  2020 HEIA-FR (heia-fr.ch/)
+ * @author     Uchendu Nwachukwu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

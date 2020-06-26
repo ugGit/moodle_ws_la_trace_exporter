@@ -17,7 +17,8 @@
  * External Web Service Template
  *
  * @package    local_wafed_moodle_webservice_plugin
- * @copyright  2011 Moodle Pty Ltd (http://moodle.com)
+ * @copyright  2020 HEIA-FR (heia-fr.ch/)
+ * @author     Uchendu Nwachukwu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once($CFG->libdir . "/externallib.php");
