@@ -16,10 +16,10 @@
 
 /**
  * Web service template plugin related strings
- * @package   localwstemplate
+ * @package   local_wafed_moodle_webservice_plugin
  * @copyright 2011 Moodle Pty Ltd (http://moodle.com)
  * @author    Jerome Mouneyrac
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Web service template';
+$string['pluginname'] = 'TB WAFED - Moodle Web Service Plugin';

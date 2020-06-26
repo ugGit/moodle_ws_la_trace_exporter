@@ -13,7 +13,7 @@ In order to function properly, follow carefully the instructions below, which wi
 - the plugin is properly installed
 
 ## Configure Your Moodle Instance
-As the plugin works with web services, these have to be enabled in your Moodle instance. 
+As the plugin works with web services, these have to be enabled in your Moodle instance:
 
 1. Access Administration > Site administration > Advanced features
 2. Check 'Enable web services' then click 'Save Changes'
@@ -38,7 +38,7 @@ Now, you're ready to install the plugin. Therefore, choose one of the below appr
 ### Installing Manually at the Server (recommended)
 1. Login to your webserver
 2. Navigate to /path/to/moodle/local/
-3. Clone this github project into the folder by executing: `git clone https://gitlab.forge.hefr.ch/uchendu.nwachukw/wafed-moodle-webservice-plugin.git`
+3. Clone this github project into the folder by executing: `git clone https://gitlab.forge.hefr.ch/uchendu.nwachukw/wafed_moodle_webservice_plugin.git`
 4. In your browser, login to your Moodle as admin.
 5. You should be notified, that additional plugins are ready to be installed. Confirm the database upgrade.
 
@@ -59,7 +59,7 @@ You can test that all web service calls work using Postman by sending the follow
 ### Request a Token
 It's important to note that the authenticated user should be **enrolled as Teacher (editingteacher) in at least one course**.
 
-`[POST] {{yourMoodleUrl}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=myservice`
+`[POST] {{yourMoodleUrl}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=wafed_webservices`
 
 You should receive a response containing a `token`, which will be used in the next requests identify the user securly. E.g.:
 ```
@@ -70,7 +70,7 @@ You should receive a response containing a `token`, which will be used in the ne
 ```
 
 ### Get a List of Available Courses
-`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wstemplate_get_available_courses&moodlewsrestformat=json`
+`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wafed_moodle_webservice_plugin_get_available_courses&moodlewsrestformat=json`
 
 You should receive a response which lists all courses where the user is enrolled as Teacher. E.g.:
 ```
@@ -93,7 +93,7 @@ You should receive a response which lists all courses where the user is enrolled
 ```
 
 ### Get the Activity Log for a specific Course
-`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wstemplate_get_course_data&moodlewsrestformat=json&courseids[0]={{courseId}}`
+`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wafed_moodle_webservice_plugin_get_course_data&moodlewsrestformat=json&courseids[0]={{courseId}}`
 
 You should receive a response which contains details over actions related to that course. E.g.:
 

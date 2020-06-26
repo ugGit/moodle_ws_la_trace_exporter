@@ -16,32 +16,32 @@
 /**
  * Web service local plugin template external functions and service definitions.
  *
- * @package    localwstemplate
+ * @package    local_wafed_moodle_webservice_plugin
  * @copyright  2011 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // We defined the web service functions to install.
 $functions = array(
-        'local_wstemplate_hello_world' => array(
-                'classname'   => 'local_wstemplate_external',
+        'local_wafed_moodle_webservice_plugin_hello_world' => array(
+                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
                 'methodname'  => 'hello_world',
-                'classpath'   => 'local/wstemplate/externallib.php',
+                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
                 'description' => 'Return Hello World FIRSTNAME. Can change the text (Hello World) sending a new text as parameter',
                 'type'        => 'read',
         ),
-        'local_wstemplate_get_available_courses' => array(
-                'classname'   => 'local_wstemplate_external',
+        'local_wafed_moodle_webservice_plugin_get_available_courses' => array(
+                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
                 'methodname'  => 'get_available_courses',
-                'classpath'   => 'local/wstemplate/externallib.php',
-                'description' => 'Return the list of courses where the user is enrolled as teacher',
+                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
+                'description' => 'Return the list of courses where the user is enrolled as Teacher (editingteacher)',
                 'type'        => 'read',
         ),
 
-        'local_wstemplate_get_course_data' => array(
-                'classname'   => 'local_wstemplate_external',
+        'local_wafed_moodle_webservice_plugin_get_course_data' => array(
+                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
                 'methodname'  => 'get_course_data',
-                'classpath'   => 'local/wstemplate/externallib.php',
+                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
                 'description' => 'Return the log for the given course',
                 'type'        => 'read',
         ),
@@ -49,10 +49,10 @@ $functions = array(
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
-        'My service' => array(
-                'functions' => array ('local_wstemplate_hello_world','local_wstemplate_get_available_courses', 'local_wstemplate_get_course_data'),
+        'TB WAFED Web Services' => array(
+                'functions' => array ('local_wafed_moodle_webservice_plugin_hello_world','local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
                 'restrictedusers' => 0,
                 'enabled'=>1,
-                'shortname' => 'myservice'
+                'shortname' => 'wafed_webservices'
         )
 );

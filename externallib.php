@@ -16,7 +16,7 @@
 /**
  * External Web Service Template
  *
- * @package    localwstemplate
+ * @package    local_wafed_moodle_webservice_plugin
  * @copyright  2011 Moodle Pty Ltd (http://moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ require_once($CFG->dirroot.'/report/log/locallib.php');
 // Include the Log Manager to access the SQL Log Reader
 use core\log\manager;
 
-class local_wstemplate_external extends external_api {
+class local_wafed_moodle_webservice_plugin_external extends external_api {
 
     /**
      * Returns description of method parameters
