@@ -79,14 +79,14 @@ You should receive a response which lists all courses where the user is enrolled
         "courseid": 2,
         "shortname": "ttc",
         "userid": 4,
-        "username": "teacher",
+        "username": "john.doe",
         "roleid": 3
     },
     {
         "courseid": 4,
         "shortname": "ac",
         "userid": 4,
-        "username": "teacher",
+        "username": "john.doe",
         "roleid": 3
     }
 }
