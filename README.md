@@ -33,7 +33,7 @@ Further information concerning the configuration of Moodle to enable web service
 
 ## Install Plugin
 
-Now, you're ready to install the plugin. Therefore, choose one of the below approaches. More information concerning the installation of Moolde plugins is available on https://docs.moodle.org/39/en/Installing_plugins#Installing_a_plugin
+Now, you're ready to install the plugin. Therefore, choose one of the below approaches. More information concerning the installation of Moodle plugins is available on https://docs.moodle.org/39/en/Installing_plugins#Installing_a_plugin
 
 ### Installing Manually at the Server (recommended)
 1. Login to your webserver
@@ -42,13 +42,13 @@ Now, you're ready to install the plugin. Therefore, choose one of the below appr
 4. In your browser, login to your Moodle as admin.
 5. You should be notified, that additional plugins are ready to be installed. Confirm the database upgrade.
 
-Alternatively to clone the github project you may also copy the plugin elsehow to the specified location.
+Alternatively to clone the github project you may also copy the plugin using a different approach. Just make sure that the location and folder name are important.
 
 ### Installing via Uploaded ZIP File
 1. Download the zip from this github project.
 2. Login to your Moodle site as an admin and go to Administration > Site administration > Plugins > Install plugins.
 3. Upload the ZIP file. You should only be prompted to add extra details (in the Show more section) if your plugin is not automatically detected.
-4. If your target directory is not writeable, you will see a warning message.
+4. If your target directory is not writable, you will see a warning message.
 5. Check the plugin validation report
 
 
@@ -61,7 +61,7 @@ It's important to note that the authenticated user should be **enrolled as Teach
 
 `[POST] {{yourMoodleUrl}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=wafed_webservices`
 
-You should receive a response containing a `token`, which will be used in the next requests identify the user securly. E.g.:
+You should receive a response containing a `token`, which will be used in the next requests identify the user securely. E.g.:
 ```
 {
     "token": "a7eb3737b6b61e33991217305e8c5e59",
