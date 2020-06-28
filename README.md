@@ -59,7 +59,7 @@ You can test that all web service calls work using Postman by sending the follow
 ### Request a Token
 It's important to note that the authenticated user should be **enrolled as Teacher (editingteacher) in at least one course**.
 
-`[POST] {{yourMoodleUrl}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=wafed_webservices`
+`[POST] {{yourMoodleUrl}}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=wafed_webservices`
 
 You should receive a response containing a `token`, which will be used in the next requests identify the user securely. E.g.:
 ```
