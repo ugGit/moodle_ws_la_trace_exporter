@@ -123,14 +123,14 @@ class local_wafed_moodle_webservice_plugin_external extends external_api {
      * 
      * @return array of log entries which represent actions.
      */
-    public static function get_course_data($courseids) {
-        global $DB;
+public static function get_course_data($courseids) {
+    global $DB;
 
-        // Parameter validation
-        $params = self::validate_parameters(self::get_course_data_parameters(),
-                array(
-                    'courseids' => $courseids,
-                ));
+    // Parameter validation
+    $params = self::validate_parameters(self::get_course_data_parameters(),
+            array(
+                'courseids' => $courseids,
+            ));
 
 
         foreach($courseids as $courseid){
@@ -174,7 +174,7 @@ class local_wafed_moodle_webservice_plugin_external extends external_api {
         // not possible when using the SQL "IN" clause.
         $selector = "courseid IN ".$coursesEnumerated;
         $orderby = "timecreated ASC";
-        $maxrecord = $logreader->get_events_select_count($selector, $params);
+        $maxrecord = $logreader->get_events_select_count($selector, array());
         $logOutput = $logreader->get_events_select($selector, array(), $orderby, 0, $maxrecord);
         $result = [];
         foreach($logOutput as $item){
