@@ -13,7 +13,7 @@ In order to function properly, follow carefully the instructions below, which wi
 - the plugin is properly installed
 
 ## Configure Your Moodle Instance
-As the plugin works with web services, these have to be enabled in your Moodle instance:
+As the plugin works with web services, they have to be enabled in your Moodle instance:
 
 1. Access Administration > Site administration > Advanced features
 2. Check 'Enable web services' then click 'Save Changes'
