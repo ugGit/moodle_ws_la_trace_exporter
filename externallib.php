@@ -208,13 +208,13 @@ public static function get_course_data($courseids) {
                     'action' => new external_value(PARAM_TEXT, 'the action type'),
                     'target' => new external_value(PARAM_TEXT, 'the target on which the action aims'),
                     'crud' => new external_value(PARAM_TEXT, 'the type of action (Create/Read/Update/Delete)'),
-                    'contextlevel' => new external_value(PARAM_TEXT, 'the context level of the action (course, activity, course category, etc.)'), 
-                    'edulevel' => new external_value(PARAM_TEXT, 'the level of educational value of the event'), 
+                    'contextlevel' => new external_value(PARAM_INT, 'the context level of the action (course, activity, course category, etc.)'), 
+                    'edulevel' => new external_value(PARAM_INT, 'the level of educational value of the event'), 
                     'eventname' => new external_value(PARAM_TEXT, 'the full moodle event name'),
                     'userid' => new external_value(PARAM_INT, 'the users id'),
                     'role' => new external_value(PARAM_TEXT, 'the role(s) assigned to the user in this course'),
-                    'relateduserid' => new external_value(PARAM_TEXT, 'the affected user if any'),
-                    'courseid' => new external_value(PARAM_TEXT, 'the course id'),
+                    'relateduserid' => new external_value(PARAM_INT, 'the affected user if any'),
+                    'courseid' => new external_value(PARAM_INT, 'the course id'),
                     'timecreated' => new external_value(PARAM_INT, 'the creation time of the action'),
                 )
             )
