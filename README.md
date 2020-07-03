@@ -57,7 +57,7 @@ Alternatively to clone the github project you may also copy the plugin using a d
 You can test that all web service calls work using Postman by sending the following specified requests to your Moodle instance.
 
 ### Request a Token
-It's important to note that the authenticated user should be **enrolled as Teacher (editingteacher) in at least one course**.
+It's important to note that the authenticated user should be **enrolled as Teacher (editingteacher) in at least one course**. Furthermore, it's not possible to request a token for an admin user, so make sure you use a regular user.
 
 `[POST] {{yourMoodleUrl}}/login/token.php?username={{yourUsername}}&password={{yourPassword}}&service=wafed_webservices`
 
