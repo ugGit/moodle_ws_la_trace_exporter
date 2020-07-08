@@ -15,14 +15,14 @@ In order to function properly, follow carefully the instructions below, which wi
 ## Configure Your Moodle Instance
 As the plugin works with web services, they have to be enabled in your Moodle instance:
 
-1. Access Administration > Site administration > Advanced features
+1. Access Site administration > Advanced features
 2. Check 'Enable web services' then click 'Save Changes'
-3. Access Administration > Site administration > Plugins > Web services > Manage protocols
+3. Access Site administration > Plugins > Web services > Manage protocols
 4. Enable the REST protocol
 
 Additionally, you must equip the users with some extended capabilities:
 
-1. Access Administration > Site administration > Users > Permissions > Define roles
+1. Access Site administration > Users > Permissions > Define roles
 2. Assign (to Authenticated Users) the capability _moodle/webservice:createtoken_ to allow the generation of a security key
 3. Assign (to Authenticated Users) the capability _webservice/rest:use_ to allow the use of the communication protocol
 
