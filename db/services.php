@@ -24,29 +24,29 @@
 
 // We defined the web service functions to install.
 $functions = array(
-        'local_wafed_moodle_webservice_plugin_get_available_courses' => array(
-                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
-                'methodname'  => 'get_available_courses',
-                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
-                'description' => 'Return the list of courses where the user is enrolled as Teacher (editingteacher)',
-                'type'        => 'read',
-        ),
+  'local_wafed_moodle_webservice_plugin_get_available_courses' => array(
+    'classname'   => 'local_wafed_moodle_webservice_plugin_external',
+    'methodname'  => 'get_available_courses',
+    'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
+    'description' => 'Return the list of courses where the user is enrolled as Teacher (editingteacher)',
+    'type'        => 'read',
+  ),
 
-        'local_wafed_moodle_webservice_plugin_get_course_data' => array(
-                'classname'   => 'local_wafed_moodle_webservice_plugin_external',
-                'methodname'  => 'get_course_data',
-                'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
-                'description' => 'Return the log for the given course',
-                'type'        => 'read',
-        ),
+  'local_wafed_moodle_webservice_plugin_get_course_data' => array(
+    'classname'   => 'local_wafed_moodle_webservice_plugin_external',
+    'methodname'  => 'get_course_data',
+    'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
+    'description' => 'Return the log for the given course',
+    'type'        => 'read',
+  ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
-        'TB WAFED Web Services' => array(
-                'functions' => array ('local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
-                'restrictedusers' => 0,
-                'enabled'=>1,
-                'shortname' => 'wafed_webservices'
-        )
+  'TB WAFED Web Services' => array(
+    'functions' => array ('local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
+    'restrictedusers' => 0,
+    'enabled'=> 1,
+    'shortname' => 'wafed_webservices'
+  )
 );
