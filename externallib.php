@@ -46,28 +46,11 @@ class local_wafed_moodle_webservice_plugin_external extends external_api {
    * 
    * @return array of available courses
    */
-  public static function get_available_courses($welcomemessage = 'Hello world, ') {
+  public static function get_available_courses() {
     // Make the User object available in this function
     global $USER;
     // Make the DB object available in this function
     global $DB;
-
-    //Parameter validation if any
-
-    /* Could fetch all enrolled courses. Then show all courses.
-       Next step would be to ask if all users or a specific one. Thus, create a new endpoint.
-       moodle/course:viewparicipants capability would be required
-    //Context validation
-    //OPTIONAL but in most web service it should present
-    $context = get_context_instance(CONTEXT_USER, $USER->id);
-    self::validate_context($context);
-
-    //Capability checking
-    //OPTIONAL but in most web service it should present       
-    if (!has_capability('moodle/user:viewdetails', $context)) {
-      throw new moodle_exception('cannotviewprofile');
-    }
-    */
 
     // Check courses that the user is enrolled in as editingteacher (roleid = 3)
     $sql = "SELECT c.id AS 'courseid', c.shortname, u.id AS 'userid', u.username, ra.roleid FROM {course} c 
