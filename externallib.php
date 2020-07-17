@@ -116,7 +116,7 @@ class local_wafed_moodle_webservice_plugin_external extends external_api {
       ));
 
 
-    foreach($courseids as $courseid){
+    foreach($params['courseids'] as $courseid){
       // Context validation
       $coursecontext = context_course::instance($courseid);
       self::validate_context($coursecontext);
