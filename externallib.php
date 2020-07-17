@@ -106,11 +106,11 @@ class local_wafed_moodle_webservice_plugin_external extends external_api {
    * 
    * @return array of log entries which represent actions.
    */
-	public static function get_course_data($courseids) {
-		global $DB;
+  public static function get_course_data($courseids) {
+    global $DB;
 
-		// Parameter validation
-		$params = self::validate_parameters(self::get_course_data_parameters(),
+    // Parameter validation
+    $params = self::validate_parameters(self::get_course_data_parameters(),
       array(
         'courseids' => $courseids,
       ));
