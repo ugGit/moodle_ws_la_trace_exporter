@@ -70,7 +70,7 @@ You should receive a response containing a `token`, which will be used in the ne
 ```
 
 ### Get a List of Available Courses
-`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wafed_moodle_webservice_plugin_get_available_courses&moodlewsrestformat=json`
+`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_moodle_ws_la_trace_exporter_get_available_courses&moodlewsrestformat=json`
 
 You should receive a response which lists all courses where the user is enrolled as Teacher. E.g.:
 ```
@@ -93,7 +93,7 @@ You should receive a response which lists all courses where the user is enrolled
 ```
 
 ### Get the Activity Log for a specific Course
-`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_wafed_moodle_webservice_plugin_get_course_data&moodlewsrestformat=json&courseids[0]={{courseId}}`
+`[POST] {{yourMoodleUrl}/webservice/rest/server.php?wstoken={{token}}&wsfunction=local_moodle_ws_la_trace_exporter_get_course_data&moodlewsrestformat=json&courseids[0]={{courseId}}`
 
 You should receive a response which contains details over actions related to that course. E.g.:
 

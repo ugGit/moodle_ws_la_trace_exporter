@@ -16,7 +16,7 @@
 /**
  * Web service local plugin template external functions and service definitions.
  *
- * @package    local_wafed_moodle_webservice_plugin
+ * @package    local_moodle_ws_la_trace_exporter
  * @copyright  2020 HEIA-FR (heia-fr.ch/)
  * @author     Uchendu Nwachukwu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -24,18 +24,18 @@
 
 // We defined the web service functions to install.
 $functions = array(
-  'local_wafed_moodle_webservice_plugin_get_available_courses' => array(
-    'classname'   => 'local_wafed_moodle_webservice_plugin_external',
+  'local_moodle_ws_la_trace_exporter_get_available_courses' => array(
+    'classname'   => 'local_moodle_ws_la_trace_exporter_external',
     'methodname'  => 'get_available_courses',
-    'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
+    'classpath'   => 'local/moodle_ws_la_trace_exporter/externallib.php',
     'description' => 'Return the list of courses where the user is enrolled as Teacher (editingteacher)',
     'type'        => 'read',
   ),
 
-  'local_wafed_moodle_webservice_plugin_get_course_data' => array(
-    'classname'   => 'local_wafed_moodle_webservice_plugin_external',
+  'local_moodle_ws_la_trace_exporter_get_course_data' => array(
+    'classname'   => 'local_moodle_ws_la_trace_exporter_external',
     'methodname'  => 'get_course_data',
-    'classpath'   => 'local/wafed_moodle_webservice_plugin/externallib.php',
+    'classpath'   => 'local/moodle_ws_la_trace_exporter/externallib.php',
     'description' => 'Return the log for the given course',
     'type'        => 'read',
   ),
@@ -44,9 +44,9 @@ $functions = array(
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
 $services = array(
   'TB WAFED Web Services' => array(
-    'functions' => array ('local_wafed_moodle_webservice_plugin_get_available_courses', 'local_wafed_moodle_webservice_plugin_get_course_data'),
+    'functions' => array('local_moodle_ws_la_trace_exporter_get_available_courses', 'local_moodle_ws_la_trace_exporter_get_course_data'),
     'restrictedusers' => 0,
-    'enabled'=> 1,
+    'enabled' => 1,
     'shortname' => 'wafed_webservices'
   )
 );
